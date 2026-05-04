@@ -11,48 +11,72 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
+
+data class AppSettings(
+    val isDarkMode: Boolean = false,
+    val accentColor: Color = BrandBlue,
+    val precision: Int = 4
+)
+
+val LocalAppSettings = staticCompositionLocalOf { AppSettings() }
 
 private val DarkColorScheme = darkColorScheme(
-    primary = ScienceBlue,
-    secondary = VividPurple,
-    tertiary = ElectricOrange,
-    background = Color(0xFF121212),
-    surface = Color(0xFF1E1E1E),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.Black
+    primary = DarkPrimary,
+    onPrimary = DarkOnPrimary,
+    primaryContainer = DarkPrimaryContainer,
+    background = DarkBackground,
+    surface = DarkSurface,
+    onBackground = DarkOnSurface,
+    onSurface = DarkOnSurface,
+    surfaceVariant = DarkSurfaceVariant,
+    onSurfaceVariant = DarkOnSurfaceVariant,
+    outline = DarkOutline
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = ScienceBlue,
-    secondary = VividPurple,
-    tertiary = ElectricOrange,
-    background = BackgroundLight,
-    surface = SurfaceLight,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White
+    primary = Primary,
+    onPrimary = OnPrimary,
+    primaryContainer = PrimaryContainer,
+    background = Background,
+    surface = Surface,
+    onBackground = OnBackground,
+    onSurface = OnSurface,
+    surfaceVariant = SurfaceVariant,
+    onSurfaceVariant = OnSurfaceVariant,
+    outline = Outline
 )
 
 @Composable
 fun NumericalAnalysisTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // Set to false to prioritize brand colors
+    settings: AppSettings = AppSettings(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val darkTheme = settings.isDarkMode
+    val accentColor = settings.accentColor
+    
+    val colorScheme = if (darkTheme) {
+        DarkColorScheme.copy(
+            primary = accentColor,
+            onPrimary = if (accentColor == BrandOrange) Color.Black else Color.White,
+            primaryContainer = accentColor.copy(alpha = 0.2f),
+            onPrimaryContainer = accentColor
+        )
+    } else {
+        LightColorScheme.copy(
+            primary = accentColor,
+            onPrimary = Color.White,
+            primaryContainer = accentColor.copy(alpha = 0.1f),
+            onPrimaryContainer = accentColor
+        )
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    CompositionLocalProvider(LocalAppSettings provides settings) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 }

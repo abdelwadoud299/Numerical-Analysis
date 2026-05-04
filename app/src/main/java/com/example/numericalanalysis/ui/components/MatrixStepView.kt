@@ -1,36 +1,33 @@
 package com.example.numericalanalysis.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.numericalanalysis.data.model.MatrixStep
 
 @Composable
 fun MatrixStepView(steps: List<MatrixStep>) {
-    LazyColumn(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(steps) { step ->
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
+        steps.forEach { step ->
+            GlassCard {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
                         text = step.stepDescription,
                         style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                     MatrixDisplay(matrix = step.matrix, constants = step.b)
                 }
             }
@@ -40,25 +37,43 @@ fun MatrixStepView(steps: List<MatrixStep>) {
 
 @Composable
 fun MatrixDisplay(matrix: Array<DoubleArray>, constants: DoubleArray? = null) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         for (i in matrix.indices) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("[", style = MaterialTheme.typography.bodyMedium)
-                for (j in matrix[i].indices) {
-                    Text(
-                        text = "%.2f".format(matrix[i][j]),
-                        modifier = Modifier.width(50.dp),
-                        style = MaterialTheme.typography.bodySmall
-                    )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Matrix elements
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    for (j in matrix[i].indices) {
+                        Text(
+                            text = "%6.2f".format(matrix[i][j]),
+                            modifier = Modifier.width(60.dp),
+                            style = MaterialTheme.typography.bodySmall,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
-                Text("]", style = MaterialTheme.typography.bodyMedium)
                 
                 constants?.let {
-                    Text("|", style = MaterialTheme.typography.bodyMedium)
+                    // Vertical separator
+                    Box(modifier = Modifier.width(1.dp).height(20.dp).background(MaterialTheme.colorScheme.outlineVariant))
+                    
                     Text(
-                        text = "%.2f".format(it[i]),
-                        modifier = Modifier.width(50.dp),
-                        style = MaterialTheme.typography.bodySmall
+                        text = "%6.2f".format(it[i]),
+                        modifier = Modifier.width(60.dp),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
