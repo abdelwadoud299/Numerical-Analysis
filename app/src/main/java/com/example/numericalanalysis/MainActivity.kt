@@ -16,9 +16,15 @@ import androidx.compose.material.icons.filled.SpaceDashboard
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.numericalanalysis.ui.components.GlassCard
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -27,13 +33,20 @@ import com.example.numericalanalysis.ui.navigation.NavGraph
 import com.example.numericalanalysis.ui.navigation.Screen
 import com.example.numericalanalysis.ui.theme.AppSettings
 import com.example.numericalanalysis.ui.theme.NumericalAnalysisTheme
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.ui.graphics.toArgb
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            var appSettings by remember { mutableStateOf(AppSettings()) }
+            val appSettingsSaver = Saver<AppSettings, Map<String, Any>>(
+                save = { mapOf("dark" to it.isDarkMode, "color" to it.accentColor.toArgb(), "prec" to it.precision) },
+                restore = { AppSettings(it["dark"] as Boolean, Color(it["color"] as Int), it["prec"] as Int) }
+            )
+            var appSettings by rememberSaveable(stateSaver = appSettingsSaver) { mutableStateOf(AppSettings()) }
             
             NumericalAnalysisTheme(settings = appSettings) {
                 MainApp(
@@ -62,72 +75,67 @@ fun MainApp(
     )
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 16.dp)
-                    .navigationBarsPadding(),
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
-                shape = RoundedCornerShape(32.dp),
-                tonalElevation = 10.dp,
-                shadowElevation = 15.dp,
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.3f))
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f),
+                tonalElevation = 8.dp,
+                shadowElevation = 16.dp
             ) {
-                NavigationBar(
-                    containerColor = Color.Transparent,
-                    tonalElevation = 0.dp,
-                    windowInsets = WindowInsets(0, 0, 0, 0),
-                    modifier = Modifier.height(72.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .height(72.dp),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     items.forEach { item ->
                         val isSelected = currentDestination?.hierarchy?.any { it.route == item.route } == true
-                        NavigationBarItem(
-                            icon = { 
-                                Icon(
-                                    item.icon, 
-                                    contentDescription = item.title,
-                                    tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                                    modifier = Modifier.size(26.dp)
-                                ) 
-                            },
-                            label = { 
-                                Text(
-                                    item.title,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
-                                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                                ) 
-                            },
-                            selected = isSelected,
-                            alwaysShowLabel = true,
-                            onClick = {
-                                navController.navigate(item.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
+                        
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    navController.navigate(item.route) {
+                                        if (item.route == Screen.Dashboard.route) {
+                                            popUpTo(navController.graph.id) { inclusive = true }
+                                        } else {
+                                            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = item.route != Screen.Dashboard.route
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
                                 }
-                            },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = MaterialTheme.colorScheme.primary,
-                                selectedTextColor = MaterialTheme.colorScheme.primary,
-                                indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
-                                unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                .padding(vertical = 8.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.title,
+                                modifier = Modifier.size(24.dp),
+                                tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                             )
-                        )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = item.title,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             }
         }
-    ) { innerPadding ->
+    ) { _ ->
         NavGraph(
             navController = navController,
             settings = settings,
             onSettingsChange = onSettingsChange,
-            modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())
+            modifier = Modifier // No more bottom padding here
         )
     }
 }

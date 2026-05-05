@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Numerical Lab - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "on-tertiary": "#ffffff",
+                      "tertiary": "#5e2300",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed-dim": "#85d2e0",
+                      "outline-variant": "#c2c6d3",
+                      "surface-dim": "#d9d9e1",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#f0f0f8",
+                      "on-surface-variant": "#424751",
+                      "tertiary-fixed-dim": "#ffb692",
+                      "inverse-surface": "#2e3036",
+                      "outline": "#737783",
+                      "surface": "#f9f9ff",
+                      "on-background": "#191c21",
+                      "surface-container-low": "#f3f3fa",
+                      "tertiary-fixed": "#ffdbcb",
+                      "on-secondary-fixed-variant": "#004f58",
+                      "tertiary-container": "#823400",
+                      "primary-container": "#004a99",
+                      "on-surface": "#191c21",
+                      "primary": "#00346f",
+                      "on-secondary-container": "#0d6d79",
+                      "on-primary-fixed-variant": "#00458f",
+                      "secondary-fixed": "#a2effd",
+                      "secondary-container": "#9fecfa",
+                      "surface-tint": "#255dad",
+                      "inverse-primary": "#abc7ff",
+                      "on-primary-container": "#9bbdff",
+                      "primary-fixed-dim": "#abc7ff",
+                      "on-tertiary-fixed-variant": "#7a3000",
+                      "surface-container-highest": "#e2e2e9",
+                      "on-tertiary-container": "#ffa87c",
+                      "background": "#f9f9ff",
+                      "secondary": "#016874",
+                      "on-secondary-fixed": "#001f24",
+                      "primary-fixed": "#d7e2ff",
+                      "on-primary-fixed": "#001b3f",
+                      "surface-container-high": "#e7e8ef",
+                      "surface-container": "#ededf5",
+                      "on-tertiary-fixed": "#341100",
+                      "on-error": "#ffffff",
+                      "surface-bright": "#f9f9ff",
+                      "on-error-container": "#93000a",
+                      "on-primary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-variant": "#e2e2e9"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "margin-mobile": "16px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "base": "4px",
+                      "lg": "24px",
+                      "gutter": "12px",
+                      "xl": "32px"
+              },
+              "fontFamily": {
+                      "matrix-cell": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "math-display": [
+                              "JetBrains Mono"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Space Grotesk"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "matrix-cell": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "math-display": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "57px",
+                              {
+                                      "lineHeight": "64px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+          .glass-panel {
+              background: rgba(255, 255, 255, 0.7);
+              backdrop-filter: blur(20px);
+              -webkit-backdrop-filter: blur(20px);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+          }
+      </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md text-body-md pt-16 pb-20 selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center px-4 h-16 bg-white/70 backdrop-blur-md text-blue-700 font-['Inter'] font-semibold tracking-tight border-b border-white/20 shadow-sm transition-transform active:scale-95">
+<button class="p-2 mr-2 text-blue-700 hover:bg-blue-50/50 rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="flex-1 text-xl font-bold text-blue-900">Numerical Lab</h1>
+<button class="p-2 ml-2 text-blue-700 hover:bg-blue-50/50 rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<main class="p-md lg:p-xl max-w-7xl mx-auto space-y-lg">
+<!-- Welcome Section -->
+<section class="space-y-sm">
+<h2 class="font-headline-md text-headline-md text-primary">Dashboard</h2>
+<p class="text-on-surface-variant max-w-2xl">Select a numerical method to begin computation. The environment supports iterative solvers, decomposition techniques, and advanced root-finding algorithms.</p>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Root-Finding Techniques -->
+<section class="space-y-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary bg-primary-container/20 p-2 rounded-lg" data-icon="functions">functions</span>
+<h3 class="font-headline-md text-lg font-semibold text-on-surface">Root-Finding Techniques</h3>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<!-- Newton-Raphson Card -->
+<div class="glass-panel rounded-xl p-md shadow-sm hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start mb-sm relative z-10">
+<h4 class="font-semibold text-primary">Newton-Raphson</h4>
+<span class="material-symbols-outlined text-outline" data-icon="arrow_forward">arrow_forward</span>
+</div>
+<p class="text-sm text-on-surface-variant mb-md relative z-10">Fast converging method using derivatives. Ideal for continuous, differentiable functions.</p>
+<div class="font-math-display text-math-display text-primary/70 bg-surface-container-lowest p-2 rounded border border-outline-variant/50 flex justify-center items-center relative z-10">
+<span>x<sub>n+1</sub> = x<sub>n</sub> - f(x<sub>n</sub>)/f'(x<sub>n</sub>)</span>
+</div>
+</div>
+<!-- Bisection Card -->
+<div class="glass-panel rounded-xl p-md shadow-sm hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start mb-sm relative z-10">
+<h4 class="font-semibold text-secondary">Bisection Method</h4>
+<span class="material-symbols-outlined text-outline" data-icon="arrow_forward">arrow_forward</span>
+</div>
+<p class="text-sm text-on-surface-variant mb-md relative z-10">Robust, bracketed root-finding. Guaranteed convergence if root exists in interval.</p>
+<div class="font-math-display text-math-display text-secondary/70 bg-surface-container-lowest p-2 rounded border border-outline-variant/50 flex justify-center items-center relative z-10">
+<span>c = (a + b) / 2</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Linear Algebra Solvers -->
+<section class="space-y-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary bg-tertiary-container/20 p-2 rounded-lg" data-icon="grid_on">grid_on</span>
+<h3 class="font-headline-md text-lg font-semibold text-on-surface">Linear Algebra Solvers</h3>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<!-- Gaussian Elimination Card -->
+<div class="glass-panel rounded-xl p-md shadow-sm hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-tertiary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start mb-sm relative z-10">
+<h4 class="font-semibold text-tertiary">Gaussian Elimination</h4>
+<span class="material-symbols-outlined text-outline" data-icon="arrow_forward">arrow_forward</span>
+</div>
+<p class="text-sm text-on-surface-variant mb-md relative z-10">Direct solver for systems of linear equations using row reduction.</p>
+<div class="font-matrix-cell text-matrix-cell text-tertiary/70 bg-surface-container-lowest p-2 rounded border border-outline-variant/50 grid grid-cols-3 gap-1 text-center relative z-10">
+<span>1</span><span>0</span><span>0</span>
+<span>0</span><span>1</span><span>0</span>
+<span>0</span><span>0</span><span>1</span>
+</div>
+</div>
+<!-- LU Decomposition Card -->
+<div class="glass-panel rounded-xl p-md shadow-sm hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start mb-sm relative z-10">
+<h4 class="font-semibold text-primary">LU Decomposition</h4>
+<span class="material-symbols-outlined text-outline" data-icon="arrow_forward">arrow_forward</span>
+</div>
+<p class="text-sm text-on-surface-variant mb-md relative z-10">Factors a matrix as the product of a lower triangular matrix and an upper triangular matrix.</p>
+<div class="font-math-display text-math-display text-primary/70 bg-surface-container-lowest p-2 rounded border border-outline-variant/50 flex justify-center items-center relative z-10">
+<span>A = L U</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe h-20 bg-white/80 backdrop-blur-xl text-blue-700 font-['Inter'] text-[11px] font-medium rounded-t-2xl border-t border-white/30 shadow-[0_-4px_12px_rgba(0,74,153,0.05)] duration-200 ease-out">
+<!-- Active Tab: Dashboard -->
+<a class="flex flex-col items-center justify-center bg-blue-100/50 text-blue-800 rounded-2xl px-5 py-1 hover:bg-slate-100/50 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="space_dashboard" data-weight="fill" style="font-variation-settings: 'FILL' 1;">space_dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Inactive Tab: Roots -->
+<a class="flex flex-col items-center justify-center text-slate-500 px-5 py-1 hover:bg-slate-100/50 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="functions">functions</span>
+<span>Roots</span>
+</a>
+<!-- Inactive Tab: Matrices -->
+<a class="flex flex-col items-center justify-center text-slate-500 px-5 py-1 hover:bg-slate-100/50 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="grid_on">grid_on</span>
+<span>Matrices</span>
+</a>
+<!-- Inactive Tab: Compare -->
+<a class="flex flex-col items-center justify-center text-slate-500 px-5 py-1 hover:bg-slate-100/50 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="compare_arrows">compare_arrows</span>
+<span>Compare</span>
+</a>
+</nav>
+</body></html>

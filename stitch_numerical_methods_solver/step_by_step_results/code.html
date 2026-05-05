@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Step-by-Step Results View for Root-Finding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#5e2300",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#85d2e0",
+                        "outline-variant": "#c2c6d3",
+                        "surface-dim": "#d9d9e1",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f0f0f8",
+                        "on-surface-variant": "#424751",
+                        "tertiary-fixed-dim": "#ffb692",
+                        "inverse-surface": "#2e3036",
+                        "outline": "#737783",
+                        "surface": "#f9f9ff",
+                        "on-background": "#191c21",
+                        "surface-container-low": "#f3f3fa",
+                        "tertiary-fixed": "#ffdbcb",
+                        "on-secondary-fixed-variant": "#004f58",
+                        "tertiary-container": "#823400",
+                        "primary-container": "#004a99",
+                        "on-surface": "#191c21",
+                        "primary": "#00346f",
+                        "on-secondary-container": "#0d6d79",
+                        "on-primary-fixed-variant": "#00458f",
+                        "secondary-fixed": "#a2effd",
+                        "secondary-container": "#9fecfa",
+                        "surface-tint": "#255dad",
+                        "inverse-primary": "#abc7ff",
+                        "on-primary-container": "#9bbdff",
+                        "primary-fixed-dim": "#abc7ff",
+                        "on-tertiary-fixed-variant": "#7a3000",
+                        "surface-container-highest": "#e2e2e9",
+                        "on-tertiary-container": "#ffa87c",
+                        "background": "#f9f9ff",
+                        "secondary": "#016874",
+                        "on-secondary-fixed": "#001f24",
+                        "primary-fixed": "#d7e2ff",
+                        "on-primary-fixed": "#001b3f",
+                        "surface-container-high": "#e7e8ef",
+                        "surface-container": "#ededf5",
+                        "on-tertiary-fixed": "#341100",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f9f9ff",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e2e2e9",
+                        "electric-orange": "#FF5722" // Added to fulfill "Highlight convergence point with Electric Orange"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "margin-mobile": "16px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "gutter": "12px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "matrix-cell": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "math-display": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "label-sm": ["Space Grotesk"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "matrix-cell": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "math-display": ["18px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        .timeline-line {
+            position: absolute;
+            left: 24px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: theme('colors.outline-variant');
+            z-index: 0;
+        }
+        .timeline-marker {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md text-body-md pt-16 pb-24 md:pb-8">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center px-4 h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-b border-white/20 dark:border-slate-800/50 shadow-sm">
+<button class="p-2 mr-2 text-slate-500 dark:text-slate-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors rounded-full active:scale-95 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<div class="flex-1">
+<h1 class="text-xl font-bold text-blue-900 dark:text-blue-100 font-['Inter'] font-semibold tracking-tight">Numerical Lab</h1>
+</div>
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors rounded-full active:scale-95 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-4xl mx-auto px-margin-mobile md:px-md py-lg flex flex-col gap-lg">
+<!-- Header Section -->
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-sm">Newton-Raphson Method</h2>
+<p class="font-math-display text-math-display text-on-surface-variant bg-surface-container-low p-sm rounded-md inline-block">f(x) = x³ - x - 2 = 0</p>
+</div>
+<!-- Graphing Card -->
+<div class="glass-card rounded-xl p-md">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-headline-md text-[20px] font-semibold text-on-surface">Function Curve</h3>
+<div class="flex gap-sm">
+<span class="inline-flex items-center gap-xs px-2 py-1 rounded-full bg-surface-container-high font-label-sm text-label-sm text-on-surface">
+<span class="w-2 h-2 rounded-full bg-primary"></span> f(x)
+                    </span>
+<span class="inline-flex items-center gap-xs px-2 py-1 rounded-full bg-surface-container-high font-label-sm text-label-sm text-on-surface">
+<span class="w-2 h-2 rounded-full bg-electric-orange"></span> Root
+                    </span>
+</div>
+</div>
+<!-- Placeholder for Graph -->
+<div class="w-full h-[250px] bg-surface-container-lowest rounded-lg border border-outline-variant flex items-center justify-center relative overflow-hidden">
+<!-- Abstract Representation of a graph -->
+<svg class="absolute inset-0 opacity-20" height="100%" preserveaspectratio="none" viewbox="0 0 400 200" width="100%">
+<path class="text-primary" d="M0 100 Q 100 50, 200 100 T 400 100" fill="none" stroke="currentColor" stroke-width="2"></path>
+<line class="text-on-surface-variant" stroke="currentColor" stroke-width="1" x1="0" x2="400" y1="100" y2="100"></line>
+<line class="text-on-surface-variant" stroke="currentColor" stroke-width="1" x1="200" x2="200" y1="0" y2="200"></line>
+</svg>
+<div class="absolute left-[65%] top-[50%] w-3 h-3 bg-electric-orange rounded-full transform -translate-x-1/2 -translate-y-1/2 shadow-[0_0_8px_rgba(255,87,34,0.6)]"></div>
+<img alt="Graph representation background" class="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay" data-alt="A macro shot of a graphing calculator screen showing a complex mathematical curve intersecting the x-axis. The lighting is soft and ambient, highlighting the digital grid lines and the glowing pixelated line of the function. The overall mood is analytical and precise, fitting a professional mathematical tool. The color palette features deep blues and cyan accents on a dark screen background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHdLpbv8AdIT_vIjNwuCw0yS7GG__Fi4gvwK_Eqg0tCOK8if_dbpuW7Q2vr4HxYPVhsgkhrpOtlW7HWd-5yPyOQwfqK1AqiSahhZw_AXOm9N8O8sJQ0Q9oMLRMbQGvzO8aSa58OzOti6sGSrxuBNq-nDFRBes32D3wqzD3owpt4GRgLR4TGzcOnFMA2GPfZbBjud3c912D_STkOPIe1vTRhK5jsMFG6MuKook4yrSBm4FoJ_dFGkQc-OzJ7RZ4h4lYGyc2aiXhgoY"/>
+</div>
+</div>
+<!-- Iteration Timeline -->
+<div class="relative mt-md">
+<!-- Continuous Line -->
+<div class="timeline-line hidden md:block"></div>
+<div class="flex flex-col gap-md">
+<!-- Iteration 1 -->
+<div class="flex flex-col md:flex-row gap-md relative">
+<div class="timeline-marker hidden md:flex w-12 h-12 bg-surface-container-highest rounded-full items-center justify-center font-math-display text-math-display text-on-surface border-4 border-background shrink-0">
+                        1
+                    </div>
+<div class="md:hidden font-headline-md text-[18px] font-semibold text-primary">Iteration 1</div>
+<div class="glass-card flex-1 rounded-xl p-md">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-xs">x₁</div>
+<div class="font-matrix-cell text-matrix-cell text-on-surface bg-surface-container-lowest p-2 rounded border border-outline-variant">1.50000000</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-xs">f(x₁)</div>
+<div class="font-matrix-cell text-matrix-cell text-on-surface bg-surface-container-lowest p-2 rounded border border-outline-variant">-0.12500000</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Error (ε)</div>
+<div class="font-matrix-cell text-matrix-cell text-on-surface bg-surface-container-lowest p-2 rounded border border-outline-variant">0.50000000</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Iteration 2 -->
+<div class="flex flex-col md:flex-row gap-md relative">
+<div class="timeline-marker hidden md:flex w-12 h-12 bg-surface-container-highest rounded-full items-center justify-center font-math-display text-math-display text-on-surface border-4 border-background shrink-0">
+                        2
+                    </div>
+<div class="md:hidden font-headline-md text-[18px] font-semibold text-primary">Iteration 2</div>
+<div class="glass-card flex-1 rounded-xl p-md">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-xs">x₂</div>
+<div class="font-matrix-cell text-matrix-cell text-on-surface bg-surface-container-lowest p-2 rounded border border-outline-variant">1.52173913</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-xs">f(x₂)</div>
+<div class="font-matrix-cell text-matrix-cell text-on-surface bg-surface-container-lowest p-2 rounded border border-outline-variant">0.00335805</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Error (ε)</div>
+<div class="font-matrix-cell text-matrix-cell text-on-surface bg-surface-container-lowest p-2 rounded border border-outline-variant">0.02173913</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Iteration 3 (Convergence) -->
+<div class="flex flex-col md:flex-row gap-md relative">
+<div class="timeline-marker hidden md:flex w-12 h-12 bg-electric-orange text-white rounded-full items-center justify-center font-math-display text-math-display border-4 border-background shrink-0 shadow-[0_0_12px_rgba(255,87,34,0.4)]">
+                        3
+                    </div>
+<div class="md:hidden font-headline-md text-[18px] font-semibold text-electric-orange flex items-center gap-2">
+                        Iteration 3 <span class="text-[12px] bg-electric-orange/10 px-2 py-1 rounded-full uppercase tracking-wider">Converged</span>
+</div>
+<div class="glass-card flex-1 rounded-xl p-md border-electric-orange/30 shadow-[0_4px_12px_rgba(255,87,34,0.1)]">
+<div class="flex items-center gap-sm mb-md text-electric-orange font-headline-md text-[16px] font-semibold">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+                            Convergence Achieved
+                        </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-xs">x₃ (Root)</div>
+<div class="font-matrix-cell text-matrix-cell text-electric-orange bg-electric-orange/5 p-2 rounded border border-electric-orange/20 font-bold">1.52137971</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-xs">f(x₃)</div>
+<div class="font-matrix-cell text-matrix-cell text-on-surface bg-surface-container-lowest p-2 rounded border border-outline-variant">0.00000002</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Error (ε)</div>
+<div class="font-matrix-cell text-matrix-cell text-on-surface bg-surface-container-lowest p-2 rounded border border-outline-variant">0.00035942</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB -->
+<button class="fixed right-6 bottom-24 md:bottom-6 w-14 h-14 bg-[#00346f] text-white rounded-[16px] shadow-lg flex items-center justify-center hover:bg-[#00458f] transition-colors z-40">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+<!-- BottomNavBar (Mobile Only, Roots Active) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-t-2xl border-t border-white/30 dark:border-slate-800/50 shadow-[0_-4px_12px_rgba(0,74,153,0.05)]">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="space_dashboard">space_dashboard</span>
+<span class="font-['Inter'] text-[11px] font-medium">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-blue-100/50 dark:bg-blue-900/40 text-blue-800 dark:text-blue-100 rounded-2xl px-5 py-1 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="functions" style="font-variation-settings: 'FILL' 1;">functions</span>
+<span class="font-['Inter'] text-[11px] font-medium">Roots</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="grid_on">grid_on</span>
+<span class="font-['Inter'] text-[11px] font-medium">Matrices</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 duration-200 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="compare_arrows">compare_arrows</span>
+<span class="font-['Inter'] text-[11px] font-medium">Compare</span>
+</a>
+</nav>
+</body></html>

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import com.example.numericalanalysis.data.model.IterationStep
+import com.example.numericalanalysis.ui.theme.LocalAppSettings
 import com.example.numericalanalysis.util.evaluator.MathEvaluator
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -42,7 +43,9 @@ fun GraphView(
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.secondary
     val tertiaryColor = MaterialTheme.colorScheme.tertiary
-    val isDark = isSystemInDarkTheme()
+    
+    val settings = LocalAppSettings.current
+    val isDark = settings.isDarkMode
 
     Box(modifier = modifier) {
         Canvas(

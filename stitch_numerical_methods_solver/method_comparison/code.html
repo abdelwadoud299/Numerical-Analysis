@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Numerical Lab - Compare</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config injected from Style Guidance -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "tertiary": "#5e2300",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#85d2e0",
+                    "outline-variant": "#c2c6d3",
+                    "surface-dim": "#d9d9e1",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f0f0f8",
+                    "on-surface-variant": "#424751",
+                    "tertiary-fixed-dim": "#ffb692",
+                    "inverse-surface": "#2e3036",
+                    "outline": "#737783",
+                    "surface": "#f9f9ff",
+                    "on-background": "#191c21",
+                    "surface-container-low": "#f3f3fa",
+                    "tertiary-fixed": "#ffdbcb",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "tertiary-container": "#823400",
+                    "primary-container": "#004a99",
+                    "on-surface": "#191c21",
+                    "primary": "#00346f",
+                    "on-secondary-container": "#0d6d79",
+                    "on-primary-fixed-variant": "#00458f",
+                    "secondary-fixed": "#a2effd",
+                    "secondary-container": "#9fecfa",
+                    "surface-tint": "#255dad",
+                    "inverse-primary": "#abc7ff",
+                    "on-primary-container": "#9bbdff",
+                    "primary-fixed-dim": "#abc7ff",
+                    "on-tertiary-fixed-variant": "#7a3000",
+                    "surface-container-highest": "#e2e2e9",
+                    "on-tertiary-container": "#ffa87c",
+                    "background": "#f9f9ff",
+                    "secondary": "#016874",
+                    "on-secondary-fixed": "#001f24",
+                    "primary-fixed": "#d7e2ff",
+                    "on-primary-fixed": "#001b3f",
+                    "surface-container-high": "#e7e8ef",
+                    "surface-container": "#ededf5",
+                    "on-tertiary-fixed": "#341100",
+                    "on-error": "#ffffff",
+                    "surface-bright": "#f9f9ff",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-variant": "#e2e2e9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "gutter": "12px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "matrix-cell": [
+                            "JetBrains Mono"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "math-display": [
+                            "JetBrains Mono"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "label-sm": [
+                            "Space Grotesk"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "matrix-cell": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-md": [
+                            "28px",
+                            {
+                                    "lineHeight": "36px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "math-display": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-lg": [
+                            "57px",
+                            {
+                                    "lineHeight": "64px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-sm": [
+                            "11px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.5px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container min-h-screen text-on-surface font-body-md antialiased overflow-x-hidden relative">
+<!-- Atmospheric Background for Glassmorphism Context -->
+<div class="fixed inset-0 z-0 pointer-events-none opacity-40 bg-gradient-to-br from-primary-fixed/30 via-surface to-secondary-fixed/20" data-alt="A soft, abstract digital representation of mathematical spaces. Glowing, fluid gradients in light Science Blue and subtle cyan tones blend seamlessly across the canvas. The aesthetic is clean, technical, and light, designed to evoke a sense of analytical clarity and academic calm without being distracting. Light-mode specific with high-key lighting and smooth volumetric forms.">
+</div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center px-4 h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-b border-white/20 dark:border-slate-800/50 shadow-sm">
+<div class="flex-none flex items-center justify-center p-sm rounded-full hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400">menu</span>
+</div>
+<div class="flex-1 flex justify-center items-center">
+<h1 class="font-['Inter'] font-semibold tracking-tight text-xl font-bold text-blue-900 dark:text-blue-100">Numerical Lab</h1>
+</div>
+<div class="flex-none flex items-center justify-center p-sm rounded-full hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors active:scale-95 cursor-pointer">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400">settings</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 pt-24 pb-28 px-margin-mobile md:px-lg max-w-7xl mx-auto flex flex-col gap-lg">
+<!-- Summary Card (Glassmorphic) -->
+<section class="bg-surface-container-lowest/70 backdrop-blur-[20px] border border-surface-container-lowest/20 rounded-xl p-md shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-sm">
+<div>
+<h2 class="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-xs">Comparison Mode</h2>
+<h3 class="font-headline-md text-headline-md text-primary">Root Finding Methods</h3>
+</div>
+<div class="flex items-center gap-sm bg-primary-container/20 border border-primary-container/30 px-md py-sm rounded-full">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+<span class="font-body-md text-body-md text-primary font-semibold">Newton-Raphson: Fastest</span>
+</div>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-md">
+<!-- Graph Card (Spans full width on mobile, 8 cols on desktop) -->
+<section class="lg:col-span-12 xl:col-span-8 bg-surface-container-lowest/70 backdrop-blur-[20px] border border-surface-container-lowest/20 rounded-xl p-md shadow-sm flex flex-col">
+<div class="flex justify-between items-center mb-md border-b border-outline-variant/30 pb-sm">
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">Convergence Trajectory</h3>
+<div class="flex gap-sm">
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Bisection</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Newton</span>
+</div>
+</div>
+</div>
+<!-- CSS Graph Overlay Representation -->
+<div class="relative w-full h-[240px] bg-surface-container-low/50 rounded-lg border border-outline-variant/20 overflow-hidden flex items-end px-md pb-md pt-lg">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 px-md py-lg">
+<div class="border-b border-outline w-full"></div>
+<div class="border-b border-outline w-full"></div>
+<div class="border-b border-outline w-full"></div>
+<div class="border-b border-outline w-full"></div>
+</div>
+<!-- Bisection Steps (Stepped, slower) -->
+<div class="absolute bottom-md left-md right-md h-[180px] flex items-end justify-between opacity-80">
+<div class="w-[8%] h-[100%] bg-secondary/20 border-t-2 border-secondary transition-all"></div>
+<div class="w-[8%] h-[80%] bg-secondary/30 border-t-2 border-secondary transition-all"></div>
+<div class="w-[8%] h-[65%] bg-secondary/40 border-t-2 border-secondary transition-all"></div>
+<div class="w-[8%] h-[55%] bg-secondary/50 border-t-2 border-secondary transition-all"></div>
+<div class="w-[8%] h-[40%] bg-secondary/60 border-t-2 border-secondary transition-all"></div>
+<div class="w-[8%] h-[25%] bg-secondary/70 border-t-2 border-secondary transition-all"></div>
+<div class="w-[8%] h-[15%] bg-secondary/80 border-t-2 border-secondary transition-all"></div>
+<div class="w-[8%] h-[5%] bg-secondary border-t-2 border-secondary transition-all"></div>
+<div class="w-[8%] h-[2%] bg-secondary border-t-2 border-secondary transition-all"></div>
+<div class="w-[8%] h-[1%] bg-secondary border-t-2 border-secondary transition-all"></div>
+</div>
+<!-- Newton Steps (Sharp curve, faster) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveaspectratio="none" viewbox="0 0 100 100">
+<path class="text-primary opacity-90 drop-shadow-md" d="M 5,10 Q 15,90 25,95 T 45,98 T 95,99" fill="none" stroke="currentColor" stroke-width="2"></path>
+<!-- Data points -->
+<circle class="fill-primary" cx="5" cy="10" r="1.5"></circle>
+<circle class="fill-primary" cx="25" cy="95" r="1.5"></circle>
+<circle class="fill-primary" cx="45" cy="98" r="1.5"></circle>
+<circle class="fill-primary" cx="95" cy="99" r="1.5"></circle>
+</svg>
+</div>
+</section>
+<!-- Diff Metrics Container (Stack on mobile, column on desktop) -->
+<div class="lg:col-span-12 xl:col-span-4 flex flex-col gap-md">
+<!-- Method A: Bisection -->
+<section class="bg-surface-container-lowest/70 backdrop-blur-[20px] border border-surface-container-lowest/20 rounded-xl p-md shadow-sm flex-1 flex flex-col justify-between relative overflow-hidden">
+<!-- Subtle color accent line -->
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary"></div>
+<div class="mb-sm pl-sm">
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Method A: Bisection</h4>
+<p class="font-label-sm text-label-sm text-outline mt-xs">Bracket [1.0, 2.0]</p>
+</div>
+<div class="grid grid-cols-2 gap-sm pl-sm mt-auto">
+<div class="bg-surface-container-low rounded-lg p-sm border border-outline-variant/30">
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-xs">Iterations</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-math-display text-math-display text-on-surface">24</span>
+<span class="font-label-sm text-label-sm text-error flex items-center"><span class="material-symbols-outlined text-[14px]">arrow_upward</span>+21</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-sm border border-outline-variant/30">
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-xs">Final Error</span>
+<span class="font-matrix-cell text-matrix-cell text-on-surface">1.19e-07</span>
+</div>
+<div class="col-span-2 bg-surface-container-low rounded-lg p-sm border border-outline-variant/30">
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-xs">Computed Root</span>
+<span class="font-matrix-cell text-matrix-cell text-on-surface">1.41421356</span>
+</div>
+</div>
+</section>
+<!-- Method B: Newton -->
+<section class="bg-surface-container-lowest/70 backdrop-blur-[20px] border border-surface-container-lowest/20 rounded-xl p-md shadow-sm flex-1 flex flex-col justify-between relative overflow-hidden">
+<!-- Subtle color accent line -->
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="mb-sm pl-sm flex justify-between items-start">
+<div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Method B: Newton</h4>
+<p class="font-label-sm text-label-sm text-outline mt-xs">Initial Guess: 2.0</p>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="grid grid-cols-2 gap-sm pl-sm mt-auto">
+<div class="bg-primary/5 rounded-lg p-sm border border-primary/20">
+<span class="block font-label-sm text-label-sm text-primary mb-xs">Iterations</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-math-display text-math-display text-primary">3</span>
+<span class="font-label-sm text-label-sm text-secondary flex items-center"><span class="material-symbols-outlined text-[14px]">arrow_downward</span>Fast</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-sm border border-outline-variant/30">
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-xs">Final Error</span>
+<span class="font-matrix-cell text-matrix-cell text-on-surface">2.22e-16</span>
+</div>
+<div class="col-span-2 bg-surface-container-low rounded-lg p-sm border border-outline-variant/30">
+<span class="block font-label-sm text-label-sm text-on-surface-variant mb-xs">Computed Root</span>
+<span class="font-matrix-cell text-matrix-cell text-on-surface">1.41421356</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Visible on Mobile, logic maps active state to 'Compare') -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-white/30 dark:border-slate-800/50 shadow-[0_-4px_12px_rgba(0,74,153,0.05)] rounded-t-2xl">
+<!-- Dashboard (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 duration-200 ease-out flex-1" href="#">
+<span class="material-symbols-outlined mb-1">space_dashboard</span>
+<span class="font-['Inter'] text-[11px] font-medium">Dashboard</span>
+</a>
+<!-- Roots (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 duration-200 ease-out flex-1" href="#">
+<span class="material-symbols-outlined mb-1">functions</span>
+<span class="font-['Inter'] text-[11px] font-medium">Roots</span>
+</a>
+<!-- Matrices (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-1 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 duration-200 ease-out flex-1" href="#">
+<span class="material-symbols-outlined mb-1">grid_on</span>
+<span class="font-['Inter'] text-[11px] font-medium">Matrices</span>
+</a>
+<!-- Compare (Active - Applying style_active_navigation) -->
+<a class="flex flex-col items-center justify-center bg-blue-100/50 dark:bg-blue-900/40 text-blue-800 dark:text-blue-100 rounded-2xl px-5 py-1 duration-200 ease-out flex-1" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">compare_arrows</span>
+<span class="font-['Inter'] text-[11px] font-medium">Compare</span>
+</a>
+</nav>
+</body></html>

@@ -205,14 +205,14 @@ fun ComparisonMetricCard(
     accentColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val isDark = isSystemInDarkTheme()
     val settings = LocalAppSettings.current
+    val isDark = settings.isDarkMode
     
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(if (isDark) GlassBackgroundDark else GlassBackgroundLight)
-            .border(1.dp, if (isDark) GlassBorderDark else GlassBorderLight, RoundedCornerShape(16.dp))
+            .background(if (isDark) GlassBackgroundDark else Color.White)
+            .border(1.dp, if (isDark) GlassBorderDark else Color(0xFFF1F5F9), RoundedCornerShape(16.dp))
     ) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -246,7 +246,7 @@ fun MetricItem(label: String, value: String, accentColor: Color) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f), RoundedCornerShape(10.dp))
+            .background(accentColor.copy(alpha = 0.08f), RoundedCornerShape(10.dp))
             .padding(10.dp)
     ) {
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

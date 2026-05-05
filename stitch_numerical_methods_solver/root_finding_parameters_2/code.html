@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Root-Finding Settings</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "tertiary": "#5e2300",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#85d2e0",
+                    "outline-variant": "#c2c6d3",
+                    "surface-dim": "#d9d9e1",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f0f0f8",
+                    "on-surface-variant": "#424751",
+                    "tertiary-fixed-dim": "#ffb692",
+                    "inverse-surface": "#2e3036",
+                    "outline": "#737783",
+                    "surface": "#f9f9ff",
+                    "on-background": "#191c21",
+                    "surface-container-low": "#f3f3fa",
+                    "tertiary-fixed": "#ffdbcb",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "tertiary-container": "#823400",
+                    "primary-container": "#004a99",
+                    "on-surface": "#191c21",
+                    "primary": "#00346f",
+                    "on-secondary-container": "#0d6d79",
+                    "on-primary-fixed-variant": "#00458f",
+                    "secondary-fixed": "#a2effd",
+                    "secondary-container": "#9fecfa",
+                    "surface-tint": "#255dad",
+                    "inverse-primary": "#abc7ff",
+                    "on-primary-container": "#9bbdff",
+                    "primary-fixed-dim": "#abc7ff",
+                    "on-tertiary-fixed-variant": "#7a3000",
+                    "surface-container-highest": "#e2e2e9",
+                    "on-tertiary-container": "#ffa87c",
+                    "background": "#f9f9ff",
+                    "secondary": "#016874",
+                    "on-secondary-fixed": "#001f24",
+                    "primary-fixed": "#d7e2ff",
+                    "on-primary-fixed": "#001b3f",
+                    "surface-container-high": "#e7e8ef",
+                    "surface-container": "#ededf5",
+                    "on-tertiary-fixed": "#341100",
+                    "on-error": "#ffffff",
+                    "surface-bright": "#f9f9ff",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-variant": "#e2e2e9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "gutter": "12px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "matrix-cell": [
+                            "JetBrains Mono"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "math-display": [
+                            "JetBrains Mono"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "label-sm": [
+                            "Space Grotesk"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "matrix-cell": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-md": [
+                            "28px",
+                            {
+                                    "lineHeight": "36px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "math-display": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-lg": [
+                            "57px",
+                            {
+                                    "lineHeight": "64px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-sm": [
+                            "11px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.5px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Glassmorphism Utilities */
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen relative pb-28">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center px-4 h-16 bg-white/70 backdrop-blur-md border-b border-white/20 shadow-sm font-['Inter'] font-semibold tracking-tight text-blue-700">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-50/50 transition-colors active:scale-95 text-slate-500">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex-1 px-4">
+<span class="text-xl font-bold text-blue-900">Numerical Lab</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-50/50 transition-colors active:scale-95 text-slate-500">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="pt-24 px-margin-mobile md:px-lg max-w-4xl mx-auto flex flex-col gap-lg">
+<div class="flex items-center gap-xs">
+<h1 class="font-headline-md text-headline-md text-on-surface">Root-Finding Analysis</h1>
+</div>
+<!-- Function Input Card -->
+<section class="glass-card rounded-xl p-md md:p-lg flex flex-col gap-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2" for="function-input">
+<span class="material-symbols-outlined text-[18px]">functions</span>
+                OBJECTIVE FUNCTION
+            </label>
+<div class="relative flex items-center">
+<div class="absolute left-4 text-on-surface-variant font-math-display text-math-display select-none">f(x) =</div>
+<input class="w-full pl-[80px] pr-12 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-math-display text-math-display text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-outline" id="function-input" placeholder="Enter mathematical expression" type="text" value="x^3 - 2x - 5"/>
+<button class="absolute right-3 w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Math Keyboard">
+<span class="material-symbols-outlined">keyboard</span>
+</button>
+</div>
+<p class="text-xs text-outline mt-1 pl-1">Supports standard syntax (e.g., sin(x), e^x, x^2)</p>
+</section>
+<!-- Method Selection Card -->
+<section class="glass-card rounded-xl p-md md:p-lg flex flex-col gap-md">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">route</span>
+                ALGORITHM SELECTION
+            </label>
+<div class="flex flex-wrap gap-sm"><!-- Active Button: Newton-Raphson -->
+<button class="px-4 py-2 rounded-lg font-body-md text-body-md font-medium bg-primary-container text-on-primary-container border border-primary-container flex items-center gap-2 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]">check</span>
+    Newton-Raphson
+</button>
+<!-- Inactive Buttons -->
+<button class="px-4 py-2 rounded-lg font-body-md text-body-md font-medium bg-surface-container-lowest text-on-surface border border-outline-variant hover:bg-surface-container-low transition-colors flex items-center gap-2">
+    Bisection
+</button>
+<button class="px-4 py-2 rounded-lg font-body-md text-body-md font-medium bg-surface-container-lowest text-on-surface border border-outline-variant hover:bg-surface-container-low transition-colors flex items-center gap-2">
+    Secant
+</button>
+<button class="px-4 py-2 rounded-lg font-body-md text-body-md font-medium bg-surface-container-lowest text-on-surface border border-outline-variant hover:bg-surface-container-low transition-colors flex items-center gap-2">
+    False Position
+</button>
+<button class="px-4 py-2 rounded-lg font-body-md text-body-md font-medium bg-surface-container-lowest text-on-surface border border-outline-variant hover:bg-surface-container-low transition-colors flex items-center gap-2">
+    Fixed Point
+</button></div>
+</section>
+<!-- Parameters Card -->
+<section class="glass-card rounded-xl p-md md:p-lg">
+<label class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2 mb-md">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+                COMPUTATIONAL PARAMETERS
+            </label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Tolerance Slider -->
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface">Tolerance (ε)</span>
+<span class="font-matrix-cell text-matrix-cell text-primary bg-primary-container/20 px-2 py-1 rounded">1e-6</span>
+</div>
+<input class="w-full h-2 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary" max="10" min="1" type="range" value="6"/>
+<div class="flex justify-between font-label-sm text-label-sm text-outline mt-1">
+<span>High (1e-1)</span>
+<span>Precise (1e-10)</span>
+</div>
+</div>
+<!-- Initial Guess / Iterations -->
+<div class="flex gap-md">
+<div class="flex-1 flex flex-col gap-sm">
+<label class="font-body-md text-body-md text-on-surface" for="initial-guess">Initial Guess (x₀)</label>
+<input class="w-full p-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-matrix-cell text-matrix-cell text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="initial-guess" type="number" value="2"/>
+</div>
+<div class="flex-1 flex flex-col gap-sm">
+<label class="font-body-md text-body-md text-on-surface" for="max-iter">Max Iterations</label>
+<input class="w-full p-2 bg-surface-container-lowest border border-outline-variant rounded-lg font-matrix-cell text-matrix-cell text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="max-iter" type="number" value="100"/>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-4 md:right-8 z-40 bg-primary text-on-primary w-14 h-14 rounded-[16px] shadow-[0_4px_12px_rgba(0,52,111,0.3)] flex items-center justify-center hover:bg-primary/90 hover:scale-105 active:scale-95 transition-all duration-200" title="Calculate">
+<span class="material-symbols-outlined text-[28px]" data-weight="fill">calculate</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe h-20 bg-white/80 backdrop-blur-xl border-t border-white/30 shadow-[0_-4px_12px_rgba(0,74,153,0.05)] md:hidden">
+<!-- Inactive: Dashboard -->
+<button class="flex flex-col items-center justify-center text-slate-500 px-5 py-1 hover:bg-slate-100/50 duration-200 ease-out rounded-2xl w-full">
+<span class="material-symbols-outlined mb-1">space_dashboard</span>
+<span class="font-['Inter'] text-[11px] font-medium">Dashboard</span>
+</button>
+<!-- Active: Roots -->
+<button class="flex flex-col items-center justify-center bg-blue-100/50 text-blue-800 rounded-2xl px-5 py-1 duration-200 ease-out w-full">
+<span class="material-symbols-outlined mb-1" data-weight="fill">functions</span>
+<span class="font-['Inter'] text-[11px] font-bold">Roots</span>
+</button>
+<!-- Inactive: Matrices -->
+<button class="flex flex-col items-center justify-center text-slate-500 px-5 py-1 hover:bg-slate-100/50 duration-200 ease-out rounded-2xl w-full">
+<span class="material-symbols-outlined mb-1">grid_on</span>
+<span class="font-['Inter'] text-[11px] font-medium">Matrices</span>
+</button>
+<!-- Inactive: Compare -->
+<button class="flex flex-col items-center justify-center text-slate-500 px-5 py-1 hover:bg-slate-100/50 duration-200 ease-out rounded-2xl w-full">
+<span class="material-symbols-outlined mb-1">compare_arrows</span>
+<span class="font-['Inter'] text-[11px] font-medium">Compare</span>
+</button>
+</nav>
+</body></html>
