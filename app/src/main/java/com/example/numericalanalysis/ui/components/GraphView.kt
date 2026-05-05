@@ -77,7 +77,7 @@ fun GraphView(
             val gridColor = if (isDark) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.05f)
             val axisColor = if (isDark) Color.White.copy(alpha = 0.3f) else Color.Black.copy(alpha = 0.4f)
 
-            // Vertical lines
+            // Vertical lines & X-axis labels
             for (x in floor(leftEdge.toDouble()).toInt()..ceil(rightEdge.toDouble()).toInt()) {
                 val canvasX = centerX + x * scale
                 drawLine(
@@ -86,9 +86,23 @@ fun GraphView(
                     end = Offset(canvasX, height),
                     strokeWidth = if (x == 0) 2f else 1f
                 )
+                
+                // Labels
+                if (x != 0 && scale > 40f) {
+                    drawContext.canvas.nativeCanvas.drawText(
+                        x.toString(),
+                        canvasX - 10f,
+                        centerY + 30f,
+                        Paint().apply {
+                            color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.BLACK
+                            alpha = 100
+                            textSize = 24f
+                        }
+                    )
+                }
             }
 
-            // Horizontal lines
+            // Horizontal lines & Y-axis labels
             for (y in floor(bottomEdge.toDouble()).toInt()..ceil(topEdge.toDouble()).toInt()) {
                 val canvasY = centerY - y * scale
                 drawLine(
@@ -97,6 +111,20 @@ fun GraphView(
                     end = Offset(width, canvasY),
                     strokeWidth = if (y == 0) 2f else 1f
                 )
+
+                // Labels
+                if (y != 0 && scale > 40f) {
+                    drawContext.canvas.nativeCanvas.drawText(
+                        y.toString(),
+                        centerX - 40f,
+                        canvasY + 10f,
+                        Paint().apply {
+                            color = if (isDark) android.graphics.Color.WHITE else android.graphics.Color.BLACK
+                            alpha = 100
+                            textSize = 24f
+                        }
+                    )
+                }
             }
 
             // --- Draw Function Path ---

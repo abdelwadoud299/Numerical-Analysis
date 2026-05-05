@@ -54,10 +54,11 @@ fun RootFindingScreen(
     var a by remember { mutableStateOf("-2") }
     var b by remember { mutableStateOf("2") }
     var x0 by remember { mutableStateOf("1") }
-    var tolerancePower by remember { mutableStateOf(6f) }
+    var x1 by remember { mutableStateOf("2") }
+    var toleranceText by remember { mutableStateOf("0.0001") }
     var maxIter by remember { mutableStateOf("100") }
 
-    val tol = 10.0.pow(-tolerancePower.toDouble())
+    val tol = toleranceText.toDoubleOrNull() ?: 0.0001
 
     Scaffold(
         topBar = {
@@ -79,31 +80,6 @@ fun RootFindingScreen(
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.calculate(
-                        method = selectedMethod,
-                        a = a.toDoubleOrNull(),
-                        b = b.toDoubleOrNull(),
-                        x0 = x0.toDoubleOrNull(),
-                        x1 = b.toDoubleOrNull(),
-                        tolerance = tol,
-                        maxIterations = maxIter.toIntOrNull() ?: 100
-                    )
-                },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.size(56.dp)
-            ) {
-                if (isProcessing) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary, strokeWidth = 2.dp)
-                } else {
-                    Icon(Icons.Default.Calculate, contentDescription = "Calculate", modifier = Modifier.size(28.dp))
-                }
-            }
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
@@ -159,21 +135,24 @@ fun RootFindingScreen(
                             val isSelected = selectedMethod == method
                             Surface(
                                 modifier = Modifier
-                                    .clip(RoundedCornerShape(8.dp))
+                                    .clip(RoundedCornerShape(10.dp))
                                     .clickable { selectedMethod = method },
-                                color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.primary.copy(alpha = 0.03f),
-                                border = if (isSelected) null else BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)),
-                                contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                                color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                                border = BorderStroke(
+                                    1.dp, 
+                                    if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+                                ),
+                                contentColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                             ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                Box(
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                                    contentAlignment = Alignment.Center
                                 ) {
-                                    if (isSelected) {
-                                        Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
-                                    }
-                                    Text(method, style = MaterialTheme.typography.bodyMedium, fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal)
+                                    Text(
+                                        method, 
+                                        style = MaterialTheme.typography.bodyMedium, 
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                    )
                                 }
                             }
                         }
@@ -189,44 +168,68 @@ fun RootFindingScreen(
                         Text("COMPUTATIONAL PARAMETERS", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
 
-                    // Tolerance Slider
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                            Text("Tolerance (ε)", style = MaterialTheme.typography.bodyMedium)
-                            Text(
-                                "1e-${tolerancePower.toInt()}",
-                                style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
-                        Slider(
-                            value = tolerancePower,
-                            onValueChange = { tolerancePower = it },
-                            valueRange = 1f..10f,
-                            steps = 8,
-                            colors = SliderDefaults.colors(
-                                thumbColor = MaterialTheme.colorScheme.primary,
-                                activeTrackColor = MaterialTheme.colorScheme.primary,
-                                inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
-                            )
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        ParameterInput(
+                            label = "Tolerance (ε)", 
+                            value = toleranceText, 
+                            onValueChange = { toleranceText = it },
+                            modifier = Modifier.weight(1f)
                         )
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text("High (1e-1)", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline)
-                            Text("Precise (1e-10)", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline)
+                        ParameterInput(
+                            label = "Max Iterations", 
+                            value = maxIter, 
+                            onValueChange = { maxIter = it },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    // Numeric Inputs based on method
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        when (selectedMethod) {
+                            "Bisection", "False Position" -> {
+                                ParameterInput(label = "Lower Bound (a)", value = a, onValueChange = { a = it }, modifier = Modifier.weight(1f))
+                                ParameterInput(label = "Upper Bound (b)", value = b, onValueChange = { b = it }, modifier = Modifier.weight(1f))
+                            }
+                            "Secant" -> {
+                                ParameterInput(label = "First Guess (x0)", value = a, onValueChange = { a = it }, modifier = Modifier.weight(1f))
+                                ParameterInput(label = "Second Guess (x1)", value = b, onValueChange = { b = it }, modifier = Modifier.weight(1f))
+                            }
+                            "Newton-Raphson", "Fixed Point" -> {
+                                ParameterInput(label = "Initial Guess (x0)", value = x0, onValueChange = { x0 = it }, modifier = Modifier.weight(1f))
+                            }
                         }
                     }
 
-                    // Numeric Inputs
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        if (selectedMethod in listOf("Bisection", "False Position", "Secant")) {
-                            ParameterInput(label = "Lower Bound (a)", value = a, onValueChange = { a = it }, modifier = Modifier.weight(1f))
-                            ParameterInput(label = "Upper Bound (b)", value = b, onValueChange = { b = it }, modifier = Modifier.weight(1f))
+                    // Calculate Button
+                    Button(
+                        onClick = {
+                            viewModel.calculate(
+                                method = selectedMethod,
+                                a = a.toDoubleOrNull(),
+                                b = b.toDoubleOrNull(),
+                                x0 = x0.toDoubleOrNull(),
+                                x1 = x1.toDoubleOrNull(),
+                                tolerance = tol,
+                                maxIterations = maxIter.toIntOrNull() ?: 100
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    ) {
+                        if (isProcessing) {
+                            CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary, strokeWidth = 2.dp)
+                            Spacer(Modifier.width(12.dp))
+                            Text("Processing...")
                         } else {
-                            ParameterInput(label = "Initial Guess (x0)", value = x0, onValueChange = { x0 = it }, modifier = Modifier.weight(1f))
-                            ParameterInput(label = "Max Iterations", value = maxIter, onValueChange = { maxIter = it }, modifier = Modifier.weight(1f))
+                            Icon(Icons.Default.Calculate, contentDescription = null)
+                            Spacer(Modifier.width(12.dp))
+                            Text("Run Analysis", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                         }
                     }
                 }
@@ -265,7 +268,7 @@ fun RootFindingScreen(
                 }
 
                 Text("Iteration Table", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                IterationTable(steps = steps)
+                IterationTable(steps = steps, method = selectedMethod)
             }
             
             Spacer(modifier = Modifier.height(100.dp))

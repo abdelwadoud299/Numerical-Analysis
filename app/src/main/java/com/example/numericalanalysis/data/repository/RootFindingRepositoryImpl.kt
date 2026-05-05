@@ -77,7 +77,7 @@ class RootFindingRepositoryImpl : RootFindingRepository {
             val fxr = MathEvaluator.evaluate(f, nextXr)
             val error = abs((nextXr - xr) / nextXr)
             
-            steps.add(IterationStep(i, nextXr, fxr, error))
+            steps.add(IterationStep(i, nextXr, fxr, error, a = xr)) // a is xi
             xr = nextXr
             
             if (error < tol) break
@@ -91,15 +91,14 @@ class RootFindingRepositoryImpl : RootFindingRepository {
 
         for (i in 1..maxIter) {
             val fx = MathEvaluator.evaluate(f, xr)
-            // mXparser derivative syntax: der(f(x), x, x_value)
-            val dfx = MathEvaluator.evaluate(df.replace("x_value", xr.toString()), xr)
+            val dfx = MathEvaluator.evaluate(df, xr) // Evaluator should handle derivative
             
             if (abs(dfx) < 1e-15) break
             
             val nextXr = xr - (fx / dfx)
             val error = abs((nextXr - xr) / nextXr)
             
-            steps.add(IterationStep(i, nextXr, MathEvaluator.evaluate(f, nextXr), error))
+            steps.add(IterationStep(i, nextXr, MathEvaluator.evaluate(f, nextXr), error, a = xr)) // a is xi
             xr = nextXr
             
             if (error < tol) break
@@ -121,7 +120,7 @@ class RootFindingRepositoryImpl : RootFindingRepository {
             val xNext = xCurr - (fCurr * (xPrev - xCurr)) / (fPrev - fCurr)
             val error = abs((xNext - xCurr) / xNext)
             
-            steps.add(IterationStep(i, xNext, MathEvaluator.evaluate(f, xNext), error))
+            steps.add(IterationStep(i, xNext, MathEvaluator.evaluate(f, xNext), error, a = xPrev, b = xCurr)) // a=xi-1, b=xi, xr=xi+1
             
             xPrev = xCurr
             xCurr = xNext

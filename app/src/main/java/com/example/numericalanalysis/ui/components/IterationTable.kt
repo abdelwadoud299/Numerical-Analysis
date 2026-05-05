@@ -23,7 +23,7 @@ import com.example.numericalanalysis.data.model.IterationStep
 import com.example.numericalanalysis.ui.theme.LocalAppSettings
 
 @Composable
-fun IterationTable(steps: List<IterationStep>) {
+fun IterationTable(steps: List<IterationStep>, method: String) {
     val scrollState = rememberScrollState()
     val settings = LocalAppSettings.current
     val p = settings.precision
@@ -38,11 +38,26 @@ fun IterationTable(steps: List<IterationStep>) {
                     .padding(vertical = 12.dp, horizontal = 8.dp)
             ) {
                 TableCell(text = "ITER", width = 60.dp, isHeader = true)
-                TableCell(text = "xr", width = 140.dp, isHeader = true)
-                TableCell(text = "f(xr)", width = 140.dp, isHeader = true)
+                when (method) {
+                    "Bisection", "False Position" -> {
+                        TableCell(text = "a", width = 120.dp, isHeader = true)
+                        TableCell(text = "b", width = 120.dp, isHeader = true)
+                        TableCell(text = "xᵣ", width = 140.dp, isHeader = true)
+                        TableCell(text = "f(xᵣ)", width = 140.dp, isHeader = true)
+                    }
+                    "Newton-Raphson", "Fixed Point" -> {
+                        TableCell(text = "xᵢ", width = 120.dp, isHeader = true)
+                        TableCell(text = "xᵢ₊₁", width = 140.dp, isHeader = true)
+                        TableCell(text = "f(xᵢ₊₁)", width = 140.dp, isHeader = true)
+                    }
+                    "Secant" -> {
+                        TableCell(text = "xᵢ₋₁", width = 120.dp, isHeader = true)
+                        TableCell(text = "xᵢ", width = 120.dp, isHeader = true)
+                        TableCell(text = "xᵢ₊₁", width = 140.dp, isHeader = true)
+                        TableCell(text = "f(xᵢ₊₁)", width = 140.dp, isHeader = true)
+                    }
+                }
                 TableCell(text = "ERROR", width = 140.dp, isHeader = true)
-                TableCell(text = "a", width = 120.dp, isHeader = true)
-                TableCell(text = "b", width = 120.dp, isHeader = true)
             }
             
             Spacer(modifier = Modifier.height(8.dp))
@@ -51,11 +66,28 @@ fun IterationTable(steps: List<IterationStep>) {
                 steps.forEach { step ->
                     Row(modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp)) {
                         TableCell(text = step.iteration.toString(), width = 60.dp)
-                        TableCell(text = "%.${p}f".format(step.xr), width = 140.dp)
-                        TableCell(text = "%.${p}f".format(step.fxr), width = 140.dp)
+                        
+                        when (method) {
+                            "Bisection", "False Position" -> {
+                                TableCell(text = "%.${p}f".format(step.a ?: 0.0), width = 120.dp)
+                                TableCell(text = "%.${p}f".format(step.b ?: 0.0), width = 120.dp)
+                                TableCell(text = "%.${p}f".format(step.xr), width = 140.dp)
+                                TableCell(text = "%.${p}f".format(step.fxr), width = 140.dp)
+                            }
+                            "Newton-Raphson", "Fixed Point" -> {
+                                TableCell(text = "%.${p}f".format(step.a ?: 0.0), width = 120.dp)
+                                TableCell(text = "%.${p}f".format(step.xr), width = 140.dp)
+                                TableCell(text = "%.${p}f".format(step.fxr), width = 140.dp)
+                            }
+                            "Secant" -> {
+                                TableCell(text = "%.${p}f".format(step.a ?: 0.0), width = 120.dp)
+                                TableCell(text = "%.${p}f".format(step.b ?: 0.0), width = 120.dp)
+                                TableCell(text = "%.${p}f".format(step.xr), width = 140.dp)
+                                TableCell(text = "%.${p}f".format(step.fxr), width = 140.dp)
+                            }
+                        }
+                        
                         TableCell(text = step.error?.let { "%.${p}f".format(it) } ?: "---", width = 140.dp)
-                        TableCell(text = step.a?.let { "%.${p}f".format(it) } ?: "---", width = 120.dp)
-                        TableCell(text = step.b?.let { "%.${p}f".format(it) } ?: "---", width = 120.dp)
                     }
                     HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
                 }

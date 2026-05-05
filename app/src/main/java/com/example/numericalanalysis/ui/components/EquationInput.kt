@@ -9,16 +9,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Functions
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EquationInput(
     value: String,
@@ -27,6 +27,29 @@ fun EquationInput(
     label: String = "OBJECTIVE FUNCTION",
     prefix: String = "f(x) ="
 ) {
+    var showKeyboard by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    if (showKeyboard) {
+        ModalBottomSheet(
+            onDismissRequest = { showKeyboard = false },
+            sheetState = rememberModalBottomSheetState(),
+            containerColor = MaterialTheme.colorScheme.surface,
+            dragHandle = null
+        ) {
+            MathKeyboard(
+                onKeyClick = { key ->
+                    onValueChange(value + key)
+                },
+                onBackspace = {
+                    if (value.isNotEmpty()) {
+                        onValueChange(value.dropLast(1))
+                    }
+                }
+            )
+        }
+    }
+
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -84,11 +107,17 @@ fun EquationInput(
                         innerTextField()
                     }
                 )
-                IconButton(onClick = { /* TODO: Open Math Keyboard */ }, modifier = Modifier.size(24.dp)) {
+                IconButton(
+                    onClick = { 
+                        keyboardController?.hide()
+                        showKeyboard = true 
+                    }, 
+                    modifier = Modifier.size(24.dp)
+                ) {
                     Icon(
                         Icons.Default.Keyboard,
                         contentDescription = "Math Keyboard",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }

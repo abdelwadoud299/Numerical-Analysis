@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.numericalanalysis.ui.components.GlassCard
 import com.example.numericalanalysis.ui.components.GlassTopBar
@@ -57,28 +58,6 @@ fun LinearAlgebraScreen(
                 }
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    when (selectedMethod) {
-                        "Gauss" -> viewModel.solveGauss()
-                        "LU" -> viewModel.solveLU()
-                        "Cramer" -> viewModel.solveCramer()
-                        "Gauss-Jordan" -> viewModel.solveGaussJordan()
-                    }
-                },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.size(56.dp)
-            ) {
-                if (isProcessing) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary, strokeWidth = 2.dp)
-                } else {
-                    Icon(Icons.Default.Functions, contentDescription = "Solve", modifier = Modifier.size(28.dp))
-                }
-            }
-        },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
@@ -106,15 +85,15 @@ fun LinearAlgebraScreen(
 
             // Matrix Configuration & Input
             GlassCard {
-                Column {
+                Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
-                            Text("Matrix Input", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                            Text("Configure dimensions", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text("System Configuration", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text("Matrix size and values", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
 
                         Row(
@@ -130,7 +109,7 @@ fun LinearAlgebraScreen(
                                 Icon(Icons.Default.Remove, contentDescription = "Decrease Size", modifier = Modifier.size(18.dp))
                             }
                             Text(
-                                "$matrixSize × $matrixSize",
+                                "$matrixSize \u00d7 $matrixSize",
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(horizontal = 8.dp)
@@ -144,51 +123,66 @@ fun LinearAlgebraScreen(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
-
                     MatrixInput(
                         matrix = matrix,
                         constants = constants,
                         onMatrixValueChange = viewModel::updateMatrixElement,
                         onConstantValueChange = viewModel::updateConstantElement
                     )
-                }
-            }
 
-            // Method Selection
-            GlassCard {
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Icon(Icons.Default.Route, contentDescription = null, modifier = Modifier.size(18.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text("ALGORITHM SELECTION", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                    
-                    FlowRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        methods.forEach { method ->
-                            val isSelected = selectedMethod == method
-                            Surface(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .clickable { selectedMethod = method },
-                                color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.primary.copy(alpha = 0.03f),
-                                border = if (isSelected) null else BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)),
-                                contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    // Method Selection Section
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Icon(Icons.Default.Route, contentDescription = null, modifier = Modifier.size(18.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text("ALGORITHM SELECTION", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            methods.forEach { method ->
+                                val isSelected = selectedMethod == method
+                                Surface(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .clickable { selectedMethod = method },
+                                    color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                                    border = BorderStroke(
+                                        1.dp, 
+                                        if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+                                    ),
+                                    contentColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                                 ) {
-                                    if (isSelected) {
-                                        Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    Box(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+                                        Text(method, style = MaterialTheme.typography.bodyMedium, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium)
                                     }
-                                    Text(method, style = MaterialTheme.typography.bodyMedium, fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal)
                                 }
                             }
+                        }
+                    }
+
+                    // Action Button
+                    Button(
+                        onClick = {
+                            when (selectedMethod) {
+                                "Gauss" -> viewModel.solveGauss()
+                                "LU" -> viewModel.solveLU()
+                                "Cramer" -> viewModel.solveCramer()
+                                "Gauss-Jordan" -> viewModel.solveGaussJordan()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth().height(56.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    ) {
+                        if (isProcessing) {
+                            CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary, strokeWidth = 2.dp)
+                        } else {
+                            Icon(Icons.Default.Calculate, contentDescription = null)
+                            Spacer(Modifier.width(12.dp))
+                            Text("Solve System", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                         }
                     }
                 }
@@ -202,18 +196,23 @@ fun LinearAlgebraScreen(
             solutions?.let { sol ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Final Solution", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onTertiaryContainer)
-                        sol.forEachIndexed { index, value ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("x${index + 1}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-                                Text("%.${settings.precision}f".format(value), style = MaterialTheme.typography.bodyMedium, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace)
+                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Text("Final Solution Vector", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            sol.forEachIndexed { index, value ->
+                                Column(
+                                    modifier = Modifier.weight(1f).background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f), RoundedCornerShape(8.dp)).padding(8.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text("x${index + 1}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                                    Text("%.${settings.precision}f".format(value), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace)
+                                }
                             }
                         }
                     }
@@ -221,7 +220,7 @@ fun LinearAlgebraScreen(
             }
 
             if (steps.isNotEmpty()) {
-                Text("Calculation Steps", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text("Calculation Results", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 MatrixStepView(steps = steps)
             }
 
